@@ -1,0 +1,89 @@
+<?php
+	include_once "db_connect.php";
+	include_once "check_login.php";
+
+	if($_SESSION["admin"] == 1){
+		$query = "SELECT * FROM pilot_info WHERE id NOT IN (SELECT id FROM login WHERE admin=1)";
+		$result = $mysqli->query($query);
+		if($result != FALSE){
+			$res = array();
+			$i = 0;
+			while($row = mysqli_fetch_assoc($result)){
+				$res["id"][$i] = $row["id"];
+				$res["fname"][$i] = $row["fname"];
+				$res["lname"][$i] = $row["lname"];
+				$res["comandante"][$i] = $row["comandante"];
+				$res["nationality"][$i] = $row["nationality"];
+				$res["ang_license"][$i] = $row["ang_license"];
+				$res["for_license"][$i] = $row["for_license"];
+				$res["email"][$i] = $row["email"];
+				$res["contracts"][$i] = $row["contracts"];
+				$i++;
+			}
+			$cur = date_create(date("Y-m-d"));
+			for($i = 0; $i < count($res["id"]); $i++){
+				$id = $res["id"][$i];
+				$query = "SELECT * FROM validity WHERE id=$id";
+				$valresult = $mysqli->query($query);
+				
+				$allValid = true;
+				if($valresult != FALSE){
+					$row = mysqli_fetch_assoc($valresult);
+					error_log(gettype($row), 3, "../logs/log.txt");
+					foreach($row as $key => $value){
+						if($row[$key] != null && $key != "id"){
+							$check = date_create(date("Y-m-d", strtotime($value)));
+							$interval = date_diff($cur, $check, FALSE);
+							$diff = (int) $interval->format('%r%a');
+							if(intval($diff) < 0){
+								$allValid = false;
+							}
+						}elseif($key != "id"){
+							$allValid = false;
+						}
+					}
+					$res["allValid"][$i] = $allValid;
+					$res["validity"][$i] = $row;
+				}
+			}
+
+			for($i = 0; $i < count($res["id"]); $i++){
+				$id = $res["id"][$i];
+				$query = "SELECT `on`, `off` FROM available WHERE id=$id";
+				$result = $mysqli->query($query);
+				$onOffAr = array();
+				if($result != FALSE){
+					while($row = mysqli_fetch_assoc($result)){
+						$on = $row["on"];
+						$off = $row["off"];
+						if(strtotime($on) < strtotime(date("Y-m-d"))){
+							$checkOn = date("Y-m-d");
+						}else{
+							$checkOn = $on;
+						}
+						
+						$inSchedSql = "SELECT DISTINCT id FROM schedule WHERE id=$id AND sched_date>='$checkOn' AND sched_date<='$off'";
+						$inSchedRes = $mysqli->query($inSchedSql);
+						$numrows = mysqli_num_rows($inSchedRes);
+
+						if($inSchedRes != FALSE &&  $numrows > 0){
+							$inSched = true;
+						}else{
+							$inSched = false;
+						}
+						$tempAr = array("on"=>$on, "off"=>$off, "inSched"=>$inSched);
+						array_push($onOffAr, $tempAr);
+					}
+				}
+				$res["onOff"][$i] = $onOffAr;
+			}
+			print_r(json_encode($res));
+		}else{
+			print_r(json_encode(array("success"=>false, "msg"=>"Couldn't access pilot info")));
+		}
+	}else{
+		print_r(json_encode(array("success"=>false, "msg"=>"Not Admin")));
+	}
+
+	$mysqli->close();
+?>

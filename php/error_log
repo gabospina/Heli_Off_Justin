@@ -1,0 +1,9 @@
+[06-Feb-2015 12:15:19 UTC] PHP Fatal error:  Call to a member function query() on a non-object in /home/jconabree454/public_html/justinconabree.com/dev/heli/assets/php/login.php on line 8
+[09-Feb-2015 02:00:52 UTC] PHP Fatal error:  Call to a member function query() on a non-object in /home/jconabree454/public_html/justinconabree.com/dev/heli/assets/php/login.php on line 8
+[10-Feb-2015 01:11:52 UTC] PHP Fatal error:  Call to a member function query() on a non-object in /home/helioffshore/public_html/assets/php/login.php on line 8
+[10-Feb-2015 01:16:30 UTC] PHP Fatal error:  Call to a member function query() on a non-object in /home/helioffshore/public_html/assets/php/login.php on line 8
+[10-Feb-2015 01:16:39 UTC] PHP Fatal error:  Call to a member function query() on a non-object in /home/helioffshore/public_html/assets/php/login.php on line 8
+[25-Feb-2015 02:21:00 UTC] PHP Fatal error:  Call to a member function fetch_assoc() on a non-object in /home/helioffshore/public_html/assets/php/get_clock_settings.php on line 9
+[25-Feb-2015 02:21:12 UTC] PHP Fatal error:  Call to a member function fetch_assoc() on a non-object in /home/helioffshore/public_html/assets/php/get_clock_settings.php on line 9
+[25-Feb-2015 02:21:12 UTC] PHP Fatal error:  Call to a member function fetch_assoc() on a non-object in /home/helioffshore/public_html/assets/php/get_clock_settings.php on line 9
+[09-Mar-2015 09:56:30 UTC] PHP Fatal error:  Call to a member function fetch_assoc() on a non-object in /home/helioffshore/public_html/assets/php/get_clock_settings.php on line 9
